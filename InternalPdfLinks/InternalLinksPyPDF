@@ -1,0 +1,27 @@
+
+from PyPDF2 import *
+from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2.generic import RectangleObject
+from os import path
+
+pdf_writer = PdfFileWriter()
+pdf_reader = PdfFileReader(open('BlankPDF.pdf', 'rb'))
+
+x1, y1, x2, y2 = pdf_reader.getPage(0).mediaBox
+print(f'x1, x2: {x1, x2}\ny1, y2: {y1, y2}')
+
+num_of_pages = pdf_reader.getNumPages()
+
+for page in range(num_of_pages):
+    current_page = pdf_reader.getPage(page)
+    pdf_writer.addPage(current_page)
+
+# Add Link
+pdf_writer.addLink(
+    pagenum=0,
+    pagedest=3,
+    rect=RectangleObject([0, 0, 600, 850])
+)
+
+with open(path.abspath('pdf_with_link.pdf'), 'wb') as link_pdf:
+    pdf_writer.write(link_pdf)
